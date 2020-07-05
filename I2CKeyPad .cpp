@@ -1,14 +1,14 @@
 //
 //    FILE: I2CKeyPad.cpp
 //  AUTHOR: Rob Tillaart
-// VERSION: 0.1.0
+// VERSION: 0.1.1
 // PURPOSE: Arduino libray for 4x4 KeyPad connected to an I2C PCF8574
 //     URL: https://github.com/RobTillaart/I2CKeyPad
 //
 // HISTORY:
 // 0.0.1   2019-10-01 initial version
 // 0.1.0   2020-06-26 first release
-//
+// 0.1.1   2020-07-05 fix compilation for ESP32
 
 #include "I2CKeyPad.h"
 
@@ -17,7 +17,7 @@ I2CKeyPad::I2CKeyPad()
 }
 
 #if defined(ESP8266) || defined(ESP32)
-void PCF8574::begin(uint8_t sda, uint8_t scl, uint8_t address)
+bool I2CKeyPad::begin(uint8_t sda, uint8_t scl, uint8_t address)
 {
   Wire.begin(sda, scl);
   _lastKey = I2C_KEYPAD_NOKEY;
