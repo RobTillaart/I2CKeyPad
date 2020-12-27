@@ -74,8 +74,8 @@ bool I2CKeyPad::isPressed()
 
 bool I2CKeyPad::isConnected()
 {
-  uint8_t a = _read(0xF0);
-  return (a != 0xFF);
+  Wire.beginTransmission(_address);
+  return (Wire.endTransmission() == 0);
 }
 
 uint8_t I2CKeyPad::_read(uint8_t mask)
