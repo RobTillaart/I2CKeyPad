@@ -61,7 +61,7 @@ unittest(test_constructor)
   I2CKeyPad keyPad;
 
   assertTrue(keyPad.begin(KEYPAD_ADDRESS));
-  assertEqual(I2C_KEYPAD_NOKEY, keypad.getLastKey());
+  assertEqual(I2C_KEYPAD_NOKEY, keyPad.getLastKey());
   assertTrue(keyPad.isConnected());
 }
 
@@ -76,8 +76,8 @@ unittest(test_read)
   assertTrue(keyPad.isConnected());
   assertTrue(keyPad.begin(KEYPAD_ADDRESS));
 
-  assertEqual(I2C_KEYPAD_NOKEY, keypad.getKey());
-  assertFalse(keypad.isPressed());
+  assertEqual(I2C_KEYPAD_NOKEY, keyPad.getKey());
+  assertFalse(keyPad.isPressed());
 }
 
 unittest_main()
