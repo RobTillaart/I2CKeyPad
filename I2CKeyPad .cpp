@@ -1,14 +1,15 @@
 //
 //    FILE: I2CKeyPad.cpp
 //  AUTHOR: Rob Tillaart
-// VERSION: 0.1.1
+// VERSION: 0.1.2
 // PURPOSE: Arduino libray for 4x4 KeyPad connected to an I2C PCF8574
 //     URL: https://github.com/RobTillaart/I2CKeyPad
 //
-// HISTORY:
-// 0.0.1   2019-10-01 initial version
-// 0.1.0   2020-06-26 first release
-// 0.1.1   2020-07-05 fix compilation for ESP32
+//  HISTORY:
+//  0.0.1  2019-10-01  initial version
+//  0.1.0  2020-06-26  first release
+//  0.1.1  2020-07-05  fix compilation for ESP32
+//  0.1.2  2020-12-27  arduino-ci + unit test
 
 #include "I2CKeyPad.h"
 
@@ -73,8 +74,8 @@ bool I2CKeyPad::isPressed()
 
 bool I2CKeyPad::isConnected()
 {
-  uint8_t a = _read(0xF0);
-  return (a != 0xFF);
+  Wire.beginTransmission(_address);
+  return (Wire.endTransmission() == 0);
 }
 
 uint8_t I2CKeyPad::_read(uint8_t mask)

@@ -1,5 +1,9 @@
 
-# I2CKEYPAD
+[![Arduino CI](https://github.com/RobTillaart/I2CKeyPad/workflows/Arduino%20CI/badge.svg)](https://github.com/marketplace/actions/arduino_ci)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/RobTillaart/I2CKeyPad/blob/master/LICENSE)
+[![GitHub release](https://img.shields.io/github/release/RobTillaart/I2CKeyPad.svg?maxAge=3600)](https://github.com/RobTillaart/I2CKeyPad/releases)
+
+# I2CKeyPad
 
 Arduino libray for 4x4 KeyPad connected to an I2C PCF8574 
 
@@ -41,7 +45,6 @@ First call that needs to be done is **keyPad.begin(address)**. It sets the I2C a
 For the ESP32 **begin(sda, scl, address)** is provided.
 The return value shows if the PCF8574 with the given address is connected properly.
 
-
 **keyPad.getKey()**
 
 Then the user can use the **keyPad.getKey()** to read values from the keypad.
@@ -76,7 +79,8 @@ returns false if the PCF8574 cannot be connected to.
 ## Char mapping
 
 The code does not map the index on a character or digit as that depends on the application.
-It returna 0..15 if one key is pressed, 16 for **I2CKEYPAD_NOKEY** and 17 for **I2CKEYPAD_FAIL**.
+It returns 0..15 if one key is pressed, 16 for **I2CKEYPAD_NOKEY** and 17 for **I2CKEYPAD_FAIL**.
+
 
 ## Operation
 
