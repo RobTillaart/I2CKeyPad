@@ -59,8 +59,6 @@ unittest(test_constructor)
 
   const uint8_t KEYPAD_ADDRESS = 0x38;
   I2CKeyPad keyPad;
-
-  keyPad.begin();
   
   assertTrue(keyPad.begin(KEYPAD_ADDRESS));
   assertEqual(I2C_KEYPAD_NOKEY, keyPad.getLastKey());
@@ -74,8 +72,6 @@ unittest(test_read)
 
   const uint8_t KEYPAD_ADDRESS = 0x38;
   I2CKeyPad keyPad;
-
-  keyPad.begin();
 
   assertTrue(keyPad.isConnected());
   assertTrue(keyPad.begin(KEYPAD_ADDRESS));
