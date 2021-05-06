@@ -36,13 +36,15 @@ below. It might take some trying to get the correct pins connected.
 
 ## Interface
 
-**I2CKEYPAD keypad()**
-The constructor does nothing specific. 
+**I2CKEYPAD keypad(const uint8_t deviceAddress, TwoWire \*wire = &Wire)**
+
+The constructor sets the device address and optionally 
+allows to selects the I2C bus to use.
 
 **keyPad.begin()**
 
-First call that needs to be done is **keyPad.begin(address)**. It sets the I2C address of the PCF8574 used. 
-For the ESP32 **begin(sda, scl, address)** is provided.
+First call that needs to be done is **keyPad.begin()**. 
+For the ESP32 **begin(sda, scl)** is provided.
 The return value shows if the PCF8574 with the given address is connected properly.
 
 **keyPad.getKey()**

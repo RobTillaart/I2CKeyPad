@@ -10,28 +10,29 @@
 //  0.1.0  2020-06-26  first release
 //  0.1.1  2020-07-05  fix compilation for ESP32
 //  0.1.2  2020-12-27  arduino-ci + unit test
+//
+//  0.2.0  2021-05-06  MultiWire ... (breaking interface)
 
 #include "I2CKeyPad.h"
 
-I2CKeyPad::I2CKeyPad()
+I2CKeyPad::I2CKeyPad(const uint8_t deviceAddress, TwoWire *wire)
 {
+  _lastKey = I2C_KEYPAD_NOKEY;
+  _address = deviceAddress;
+  _wire    = wire;
 }
 
 #if defined(ESP8266) || defined(ESP32)
-bool I2CKeyPad::begin(uint8_t sda, uint8_t scl, uint8_t address)
+bool I2CKeyPad::begin(uint8_t sda, uint8_t scl)
 {
-  Wire.begin(sda, scl);
-  _lastKey = I2C_KEYPAD_NOKEY;
-  _address = address;
+  _wire->begin(sda, scl);
   return isConnected();
 }
 #endif
 
-bool I2CKeyPad::begin(uint8_t address)
+bool I2CKeyPad::begin()
 {
-  Wire.begin();
-  _lastKey = I2C_KEYPAD_NOKEY;
-  _address = address;
+  _wire->begin();
   return isConnected();
 }
 
@@ -74,21 +75,23 @@ bool I2CKeyPad::isPressed()
 
 bool I2CKeyPad::isConnected()
 {
-  Wire.beginTransmission(_address);
-  return (Wire.endTransmission() == 0);
+  _wire->beginTransmission(_address);
+  return (_wire->endTransmission() == 0);
 }
 
 uint8_t I2CKeyPad::_read(uint8_t mask)
 {
-  Wire.beginTransmission(_address);
-  Wire.write(mask);
-  if (Wire.endTransmission() != 0)
+  yield();  // improve the odds that IO will not interrupted.
+
+  _wire->beginTransmission(_address);
+  _wire->write(mask);
+  if (_wire->endTransmission() != 0)
   {
     // set com error
     return 0xFF;
   }
-  Wire.requestFrom(_address, (uint8_t)1);
-  return Wire.read();
+  _wire->requestFrom(_address, (uint8_t)1);
+  return _wire->read();
 }
 
 // -- END OF FILE --
