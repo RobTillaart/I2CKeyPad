@@ -1,7 +1,7 @@
 //
 //    FILE: I2CKeyPad.cpp
 //  AUTHOR: Rob Tillaart
-// VERSION: 0.1.2
+// VERSION: 0.2.1
 // PURPOSE: Arduino libray for 4x4 KeyPad connected to an I2C PCF8574
 //     URL: https://github.com/RobTillaart/I2CKeyPad
 //
@@ -12,6 +12,9 @@
 //  0.1.2  2020-12-27  arduino-ci + unit test
 //
 //  0.2.0  2021-05-06  MultiWire ... (breaking interface)
+//  0.2.1  2021-05-06  add _read(0xF0) to begin() to enable PCF8574
+//                     interrupts. (#5 thanks to JohnMac1234)
+//
 
 #include "I2CKeyPad.h"
 
@@ -26,6 +29,7 @@ I2CKeyPad::I2CKeyPad(const uint8_t deviceAddress, TwoWire *wire)
 bool I2CKeyPad::begin(uint8_t sda, uint8_t scl)
 {
   _wire->begin(sda, scl);
+  _read(0xF0);   // enable interupts
   return isConnected();
 }
 #endif
@@ -33,6 +37,7 @@ bool I2CKeyPad::begin(uint8_t sda, uint8_t scl)
 bool I2CKeyPad::begin()
 {
   _wire->begin();
+  _read(0xF0);   // enable interupts
   return isConnected();
 }
 
