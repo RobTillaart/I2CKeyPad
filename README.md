@@ -78,6 +78,15 @@ however it is not checked if multiple keys are pressed.
 returns false if the PCF8574 cannot be connected to.
 
 
+## Interrupts
+
+(Note not tested yet)
+
+Since version 0.2.1 the library should be able to generate interrupts 
+on the PCF8574 when a key is pressed. This could make checking the keypad
+far more efficient. 
+
+
 ## Char mapping
 
 The code does not map the index on a character or digit as that depends on the application.
