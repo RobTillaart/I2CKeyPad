@@ -38,7 +38,7 @@ void setup()
 void loop()
 {
   char buf[20];
-  int result = readKeyPad('#', buf, 20, 10000);
+  int result = readKeyPadUntil('#', buf, 20, 10000);
   if (result == 0)
   {
     Serial.print("SUCCESS: ");
@@ -65,7 +65,7 @@ void loop()
 // timeout = timeout in milliseconds
 // returns false if until character is not read.
 //
-int readKeyPad(char until, char * buffer, uint8_t length, uint16_t timeout)
+int readKeyPadUntil(char until, char * buffer, uint8_t length, uint16_t timeout)
 {
   char keymap[19] = "123A456B789C*0#DNF";  // ... None  Fail }
   uint8_t bufferIndex = 0;
