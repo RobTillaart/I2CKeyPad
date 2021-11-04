@@ -1,17 +1,22 @@
 
 [![Arduino CI](https://github.com/RobTillaart/I2CKeyPad/workflows/Arduino%20CI/badge.svg)](https://github.com/marketplace/actions/arduino_ci)
+[![Arduino-lint](https://github.com/RobTillaart/I2CKeyPad/actions/workflows/arduino-lint.yml/badge.svg)](https://github.com/RobTillaart/I2CKeyPad/actions/workflows/arduino-lint.yml)
+[![JSON check](https://github.com/RobTillaart/I2CKeyPad/actions/workflows/jsoncheck.yml/badge.svg)](https://github.com/RobTillaart/I2CKeyPad/actions/workflows/jsoncheck.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/RobTillaart/I2CKeyPad/blob/master/LICENSE)
 [![GitHub release](https://img.shields.io/github/release/RobTillaart/I2CKeyPad.svg?maxAge=3600)](https://github.com/RobTillaart/I2CKeyPad/releases)
+
 
 # I2CKeyPad
 
 Arduino libray for 4x4 KeyPad connected to an I2C PCF8574 
 
+
 ## Description
 
 The I2CKeyPad library implements the reading of a 4x4 keypad by means of a PCF8574.
 Smaller keypads, meaning less columns or rows (4x3) can be read with it too.
-A 5x3 keypad would require modification
+A 5x3 keypad would require modification.
+
 
 ## Connection
 
@@ -44,7 +49,7 @@ allows to selects the I2C bus to use.
 **keyPad.begin()**
 
 First call that needs to be done is **keyPad.begin()**. 
-For the ESP32 **begin(sda, scl)** is provided.
+For the ESP32 **begin(uint8_t sda, uint8_t scl)** is provided.
 The return value shows if the PCF8574 with the given address is connected properly.
 
 **keyPad.getKey()**
@@ -80,11 +85,9 @@ returns false if the PCF8574 cannot be connected to.
 
 ## Interrupts
 
-(Note not tested yet)
-
-Since version 0.2.1 the library should be able to generate interrupts 
-on the PCF8574 when a key is pressed. This could make checking the keypad
-far more efficient. 
+Since version 0.2.1 the library enables the PCF8574 to generate interrupts on the PCF8574 when a key is pressed. 
+This makes checking the keypad far more efficient. 
+See examples.
 
 
 ## Char mapping
@@ -97,3 +100,9 @@ It returns 0..15 if one key is pressed, 16 for **I2CKEYPAD_NOKEY** and 17 for **
 
 See examples
 
+
+## Future
+
+- update documentation
+- investigate 5x3 keypad and other 'formats'
+- 
