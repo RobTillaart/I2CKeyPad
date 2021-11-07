@@ -1,7 +1,7 @@
 //
 //    FILE: I2CKeyPad.cpp
 //  AUTHOR: Rob Tillaart
-// VERSION: 0.2.1
+// VERSION: 0.3.0
 // PURPOSE: Arduino library for 4x4 KeyPad connected to an I2C PCF8574
 //     URL: https://github.com/RobTillaart/I2CKeyPad
 //
@@ -14,7 +14,7 @@
 //  0.2.0  2021-05-06  MultiWire ... (breaking interface)
 //  0.2.1  2021-05-06  add _read(0xF0) to begin() to enable PCF8574
 //                     interrupts. (#5 thanks to JohnMac1234)
-//
+//  0.3.0  2021-11-04  add key mapping functions.
 
 
 #include "I2CKeyPad.h"
@@ -41,12 +41,92 @@ bool I2CKeyPad::begin(uint8_t sda, uint8_t scl)
 bool I2CKeyPad::begin()
 {
   _wire->begin();
-  _read(0xF0);   // enable interrupts
+  // enable interrupts
+  _read(0xF0);
   return isConnected();
 }
 
 
 uint8_t I2CKeyPad::getKey()
+{
+  uint8_t raw = _getKey4x4();
+  uint8_t key = raw;
+  if (_keyMapEnabled)
+  {
+    key = _keymap[raw];
+  }
+  if (raw < 16)
+  {
+    _lastKey = key;
+  }
+  return key;
+}
+
+
+// to check "press any key"
+bool I2CKeyPad::isPressed()
+{
+  uint8_t a = _read(0xF0);
+  if (a == 0xFF) return false;
+  return (a != 0xF0);
+}
+
+
+bool I2CKeyPad::isConnected()
+{
+  _wire->beginTransmission(_address);
+  return (_wire->endTransmission() == 0);
+}
+
+
+bool I2CKeyPad::loadKeyMap(char * keymap)
+{
+  _keymap = keymap;
+  _keyMapEnabled = false;
+  if (strlen(_keymap) >= 18)
+  {
+    _keyMapLoaded = true;
+  }
+  return _keyMapLoaded;
+}
+
+
+void I2CKeyPad::enableKeyMap()
+{
+  if (_keyMapLoaded)
+  {
+    _keyMapEnabled = true;
+  }
+}
+
+
+void I2CKeyPad::disableKeyMap()
+{
+  _keyMapEnabled = false;
+}
+
+
+//////////////////////////////////////////////////////
+//
+//  PRIVATE
+//
+uint8_t I2CKeyPad::_read(uint8_t mask)
+{
+  yield();  // improve the odds that IO will not interrupted.
+
+  _wire->beginTransmission(_address);
+  _wire->write(mask);
+  if (_wire->endTransmission() != 0)
+  {
+    // set communication error
+    return 0xFF;
+  }
+  _wire->requestFrom(_address, (uint8_t)1);
+  return _wire->read();
+}
+
+
+uint8_t I2CKeyPad::_getKey4x4()
 {
   // key = row + 4 x col
   uint8_t key = 0;
@@ -71,40 +151,7 @@ uint8_t I2CKeyPad::getKey()
   else if (cols == 0x07) key += 12;
   else return I2C_KEYPAD_FAIL;
 
-  _lastKey = key;
   return key;   // 0..15
-}
-
-
-// to check "press any key"
-bool I2CKeyPad::isPressed()
-{
-  uint8_t a = _read(0xF0);
-  if (a == 0xFF) return false;
-  return (a != 0xF0);
-}
-
-
-bool I2CKeyPad::isConnected()
-{
-  _wire->beginTransmission(_address);
-  return (_wire->endTransmission() == 0);
-}
-
-
-uint8_t I2CKeyPad::_read(uint8_t mask)
-{
-  yield();  // improve the odds that IO will not interrupted.
-
-  _wire->beginTransmission(_address);
-  _wire->write(mask);
-  if (_wire->endTransmission() != 0)
-  {
-    // set communication error
-    return 0xFF;
-  }
-  _wire->requestFrom(_address, (uint8_t)1);
-  return _wire->read();
 }
 
 
