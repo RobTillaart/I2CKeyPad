@@ -1,8 +1,8 @@
 //
-//    FILE: I2Ckeypad_readKeyUntil.ino
+//    FILE: I2Ckeypad_readKeyUntil_KM.ino
 //  AUTHOR: Rob Tillaart
 // VERSION: 0.1.0
-// PURPOSE: demo reading until specific keyPress
+// PURPOSE: demo reading until specific keyPress - using build in key mapping
 //     URL: https://github.com/RobTillaart/I2CKeyPad
 //
 
@@ -14,12 +14,16 @@
 //  This demo doesn't use the build in key mapping.
 //
 
+
 #include "Wire.h"
 #include "I2CKeyPad.h"
+
 
 const uint8_t KEYPAD_ADDRESS = 0x38;
 
 I2CKeyPad keyPad(KEYPAD_ADDRESS);
+
+char keymap[19] = "123A456B789C*0#DNF";     // ... NoKey  Fail }
 
 
 void setup()
@@ -34,6 +38,8 @@ void setup()
     Serial.println("\nERROR: cannot communicate to keypad.\nPlease reboot.\n");
     while (1);
   }
+
+  keyPad.loadKeyMap(keymap);
 }
 
 
@@ -73,47 +79,36 @@ void loop()
 //        -1 = keyPad fail
 //        -2 = timeout
 //        -3 = buffer overflow
+//
 int readKeyPadUntil(char until, char * buffer, uint8_t length, uint16_t timeout)
 {
-  char keymap[19] = "123A456B789C*0#DNF";  // ... NoKey  Fail }
   uint8_t bufferIndex = 0;
   uint32_t start = millis();
+  char lastChar = '\0';
 
-  // empty buffer
+  // empty the return buffer
   buffer[bufferIndex] = 0;
 
-  while (true)
+  while (millis() - start < timeout)
   {
-    // while no key is pressed wait
-    while (keymap[keyPad.getKey()] == 'N')
+    char ch = keyPad.getChar();
+    if (ch == 'N')        lastChar = 'N';
+    else if (ch == until) return 0;       // success
+    else if (ch == 'F')   return -1;      // keyPad fail
+    else
     {
-      delay(1);
-      yield();
-      if (millis() - start > timeout) return -2;
+      if (ch != lastChar)
+      {
+        lastChar = ch;
+        if ( bufferIndex == length ) return -3;  // overflow
+        // add key to buffer
+        buffer[bufferIndex++] = ch;
+        buffer[bufferIndex]   = 0;
+      }
     }
-
-    // get the key pressed
-    uint8_t raw = keyPad.getLastKey();
-
-    // process key pressed
-    uint8_t key = keymap[raw];
-
-    // handle end conditions
-    if ( key == until) return 0;
-    if ( key == 'F') return -1;    // failed to read;
-    if (bufferIndex == length) return -3;
-
-    // add key to buffer
-    buffer[bufferIndex++] = key;
-    buffer[bufferIndex] = 0;
-
-    // while key is pressed wait
-    while (keymap[keyPad.getKey()] == key)
-    {
-      yield();
-      if (millis() - start > timeout) return -2;
-    }
+    yield();
   }
+  return -2;    //  timeout
 }
 
 
