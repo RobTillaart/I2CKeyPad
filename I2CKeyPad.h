@@ -27,15 +27,18 @@ public:
 #endif
   bool    begin();
 
+  // get raw key's 0..15
   uint8_t getKey();
-  uint8_t getLastKey() { return _lastKey; };
+  uint8_t getLastKey()   { return _lastKey; };
+
   bool    isPressed();  
   bool    isConnected();
 
-  bool    loadKeyMap(char * keyMap);   // char[19]
-  void    enableKeyMap();
-  void    disableKeyMap();
-  bool    keyMapLoaded() { return _keyMapEnabled; };
+  // get 'translated' keys
+  // user must load KeyMap self, there is no check.
+  uint8_t getChar()      { return _keyMap[getKey()]; };
+  uint8_t getLastChar()  { return _keyMap[_lastKey]; };
+  void    loadKeyMap(char * keyMap);   // char[19]
 
 protected:
   uint8_t _address;
@@ -45,9 +48,7 @@ protected:
 
   TwoWire* _wire;
   
-  char *  _keymap = NULL;
-  bool    _keyMapLoaded = false;
-  bool    _keyMapEnabled = false;
+  char *  _keyMap = NULL;
 };
 
 

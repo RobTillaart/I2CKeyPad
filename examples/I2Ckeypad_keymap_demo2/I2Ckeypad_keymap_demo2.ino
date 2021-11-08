@@ -16,13 +16,13 @@
 #include "Wire.h"
 #include "I2CKeyPad.h"
 
+
 const uint8_t KEYPAD_ADDRESS = 0x38;
 
 I2CKeyPad keyPad(KEYPAD_ADDRESS);
 
-//
+
 // two different lay out styles of a nummeric keyPad
-//
 char phone_layout[19]      = "123A456B789C*0#DNF";  // N = NoKey, F = Fail
 char calculator_layout[19] = "789A456B123C*0#DNF";  // N = NoKey, F = Fail
 
@@ -41,7 +41,6 @@ void setup()
   }
 
   keyPad.loadKeyMap(phone_layout);
-  keyPad.enableKeyMap();
 }
 
 
@@ -49,14 +48,14 @@ void loop()
 {
   if (keyPad.isPressed())
   {
-    int key = keyPad.getKey();
-    Serial.print("KEY : ");
-    Serial.println(key);
-    if (key == '*')
+    int ch = keyPad.getChar();
+    Serial.print("CH : ");
+    Serial.println(ch);
+    if (ch == '*')
     {
       keyPad.loadKeyMap(phone_layout);
     }
-    if (key == '#')
+    if (ch == '#')
     {
       keyPad.loadKeyMap(calculator_layout);
     }
@@ -65,4 +64,3 @@ void loop()
 
 
 // -- END OF FILE --
-

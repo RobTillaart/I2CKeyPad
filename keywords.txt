@@ -12,9 +12,8 @@ isPressed	KEYWORD2
 isConnected()	KEYWORD2
 
 loadKeyMap	KEYWORD2
-enableKeyMap	KEYWORD2
-disableKeyMap	KEYWORD2
-keyMapLoaded	KEYWORD2
+getChar	KEYWORD2
+getLastChar	KEYWORD2
 
 
 # Instances (KEYWORD2)

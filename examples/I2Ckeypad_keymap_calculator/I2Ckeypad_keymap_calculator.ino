@@ -1,5 +1,5 @@
 //
-//    FILE: I2Ckeypad_demo2.ino
+//    FILE: I2Ckeypad_keymap_calculator.ino
 //  AUTHOR: Rob Tillaart
 // VERSION: 0.1.0
 // PURPOSE: demo key mapping
@@ -10,9 +10,12 @@
 //    pin p0-p3 rows
 //    pin p4-p7 columns
 // 4x4 or smaller keypad.
+//
+// to elaborate
 
 #include "Wire.h"
 #include "I2CKeyPad.h"
+
 
 const uint8_t KEYPAD_ADDRESS = 0x38;
 
@@ -20,9 +23,9 @@ I2CKeyPad keyPad(KEYPAD_ADDRESS);
 
 // minimal calculator layout
 char calculator_layout[19] = "789+456-123  0  NF";  // N = NoKey, F = Fail
-
 int32_t sum = 0;
 int32_t val = 0;
+
 
 void setup()
 {
@@ -38,7 +41,6 @@ void setup()
   }
 
   keyPad.loadKeyMap(calculator_layout);
-  keyPad.enableKeyMap();
 }
 
 
@@ -46,12 +48,12 @@ void loop()
 {
   if (keyPad.isPressed())
   {
-    int key = keyPad.getKey();
-    switch (key)
+    char ch = keyPad.getChar();
+    switch (ch)
     {
       case '0'...'9' :
-        val *= 10 + key - '0';
-        Serial.print(key);
+        val *= 10 + ch - '0';
+        Serial.print(ch);
         break;
       case '+':
         Serial.print(" +");

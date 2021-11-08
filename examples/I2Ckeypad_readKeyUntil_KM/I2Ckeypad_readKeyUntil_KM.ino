@@ -14,15 +14,16 @@
 //  This demo doesn't use the build in key mapping.
 //
 
+
 #include "Wire.h"
 #include "I2CKeyPad.h"
+
 
 const uint8_t KEYPAD_ADDRESS = 0x38;
 
 I2CKeyPad keyPad(KEYPAD_ADDRESS);
 
 char keymap[19] = "123A456B789C*0#DNF";     // ... NoKey  Fail }
-
 
 
 void setup()
@@ -39,7 +40,6 @@ void setup()
   }
 
   keyPad.loadKeyMap(keymap);
-  keyPad.enableKeyMap();
 }
 
 
@@ -84,26 +84,26 @@ int readKeyPadUntil(char until, char * buffer, uint8_t length, uint16_t timeout)
 {
   uint8_t bufferIndex = 0;
   uint32_t start = millis();
-  uint8_t lastKey = 255;
+  char lastChar = '\0';
 
   // empty the return buffer
   buffer[bufferIndex] = 0;
 
   while (millis() - start < timeout)
   {
-    uint8_t key = keyPad.getKey();
-    if (key == 'N')        lastKey = 'N';
-    else if (key == until) return 0;       // success
-    else if (key == 'F')   return -1;      // keyPad fail
+    char ch = keyPad.getChar();
+    if (ch == 'N')        lastChar = 'N';
+    else if (ch == until) return 0;       // success
+    else if (ch == 'F')   return -1;      // keyPad fail
     else
     {
-      if (key != lastKey)
+      if (ch != lastChar)
       {
-        lastKey = key;
+        lastChar = ch;
+        if ( bufferIndex == length ) return -3;  // overflow
         // add key to buffer
-        buffer[bufferIndex++] = key;
+        buffer[bufferIndex++] = ch;
         buffer[bufferIndex]   = 0;
-        if ( bufferIndex == length - 1 ) return -3;  // overflow
       }
     }
     yield();

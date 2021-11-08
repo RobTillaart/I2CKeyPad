@@ -36,7 +36,6 @@ void setup()
   }
 
   keyPad.loadKeyMap(keymap);
-  keyPad.disableKeyMap();     // just to do it explicitly
 }
 
 
@@ -44,17 +43,12 @@ void loop()
 {
   if (keyPad.isPressed())
   {
-    int key = keyPad.getKey();
-    Serial.print("KEY : ");
-    Serial.println(key);
-    if (key == 15)
-    {
-      keyPad.enableKeyMap();
-    }
-    if (key == '#')
-    {
-      keyPad.disableKeyMap();
-    }
+    char ch = keyPad.getChar();     // note we want the translated char
+    int key = keyPad.getLastKey();
+    Serial.print(key);
+    Serial.print(" \t");
+    Serial.println(ch);
+    delay(100);
   }
 }
 

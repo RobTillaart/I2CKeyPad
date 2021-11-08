@@ -49,17 +49,7 @@ bool I2CKeyPad::begin()
 
 uint8_t I2CKeyPad::getKey()
 {
-  uint8_t raw = _getKey4x4();
-  uint8_t key = raw;
-  if (_keyMapEnabled)
-  {
-    key = _keymap[raw];
-  }
-  if (raw < 16)
-  {
-    _lastKey = key;
-  }
-  return key;
+  return _getKey4x4();
 }
 
 
@@ -79,30 +69,9 @@ bool I2CKeyPad::isConnected()
 }
 
 
-bool I2CKeyPad::loadKeyMap(char * keymap)
+void I2CKeyPad::loadKeyMap(char * keyMap)
 {
-  _keymap = keymap;
-  _keyMapEnabled = false;
-  if (strlen(_keymap) >= 18)
-  {
-    _keyMapLoaded = true;
-  }
-  return _keyMapLoaded;
-}
-
-
-void I2CKeyPad::enableKeyMap()
-{
-  if (_keyMapLoaded)
-  {
-    _keyMapEnabled = true;
-  }
-}
-
-
-void I2CKeyPad::disableKeyMap()
-{
-  _keyMapEnabled = false;
+  _keyMap = keyMap;
 }
 
 
@@ -150,6 +119,8 @@ uint8_t I2CKeyPad::_getKey4x4()
   else if (cols == 0x0B) key += 8;
   else if (cols == 0x07) key += 12;
   else return I2C_KEYPAD_FAIL;
+
+  _lastKey = key;
 
   return key;   // 0..15
 }
