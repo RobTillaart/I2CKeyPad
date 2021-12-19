@@ -30,7 +30,7 @@
 
 unittest_setup()
 {
-  fprintf(stderr, "VERSION: %s\n", (char *) I2C_KEYPAD_LIB_VERSION);
+  fprintf(stderr, "I2C_KEYPAD_LIB_VERSION: %s\n", (char *) I2C_KEYPAD_LIB_VERSION);
 }
 
 
@@ -42,7 +42,7 @@ unittest_teardown()
 unittest(test_constants)
 {
   assertEqual(16, I2C_KEYPAD_NOKEY);
-  assertEqual(17, I2C_KEYPAD_NOKEY);
+  assertEqual(17, I2C_KEYPAD_FAIL);
 }
 
 
