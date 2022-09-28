@@ -18,6 +18,7 @@ Smaller keypads, meaning less columns or rows (4x3) can be read with it too.
 
 Since 0.3.2 the library allows a 5x3, 6x2 or 8x1 or smaller keypad to be connected too.
 
+Relates to https://github.com/RobTillaart/I2CKeyPad8x8. which is an 8x8 version using PCF8575.
 
 
 ## Connection
