@@ -45,17 +45,17 @@ It might take some trying to get the correct pins connected.
 
 ## Interface
 
-- **I2CKEYPAD keypad(const uint8_t deviceAddress, TwoWire \*wire = &Wire)** 
+- **I2CKEYPAD(const uint8_t deviceAddress, TwoWire \*wire = &Wire)** 
 The constructor sets the device address and optionally 
 allows to selects the I2C bus to use.
-- **bool keyPad.begin()** The return value shows if the PCF8574 with the given address is connected properly.
+- **bool begin()** The return value shows if the PCF8574 with the given address is connected properly.
 - **bool begin(uint8_t sda, uint8_t scl)** for ESP32.
 The return value shows if the PCF8574 with the given address is connected properly.
-- **keyPad.isConnected()** returns false if the PCF8574 cannot be connected to.
-- **uint8_t keyPad.getKey()** Returns default 0..15 for regular keys, 
+- **bool isConnected()** returns false if the PCF8574 cannot be connected to.
+- **uint8_t getKey()** Returns default 0..15 for regular keys, 
 Returns 16 if no key is pressed and 17 in case of an error.
-- **keyPad.getLastKey()** Returns the last **valid** key pressed 0..15. Initially it will return 16 (noKey).
-- **keyPad.isPressed()** Returns true if one or more keys of the keyPad is pressed, 
+- **uint8_t getLastKey()** Returns the last **valid** key pressed 0..15. Initially it will return 16 (noKey).
+- **bool isPressed()** Returns true if one or more keys of the keyPad is pressed, 
 however it is not checked if multiple keys are pressed.
 
 
