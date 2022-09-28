@@ -57,7 +57,7 @@ unittest(test_constructor)
   const uint8_t KEYPAD_ADDRESS = 0x38;
   I2CKeyPad keyPad(KEYPAD_ADDRESS);
 
-  assertEqual(I2C_KEYPAD_NOKEY, keyPad.getLastChar());
+  assertEqual(I2C_KEYPAD_NOKEY, keyPad.getLastKey());
 
   // assertTrue(keyPad.begin());
   // assertTrue(keyPad.isConnected());
@@ -96,7 +96,7 @@ unittest(test_KeyMap)
 
   char keymap[19] = "123A456B789C*0#DNF";
   keyPad.loadKeyMap(keymap);
-  assertEqual('N', keyPad.getLastKey());
+  assertEqual('N', keyPad.getLastChar());
 }
 
 
