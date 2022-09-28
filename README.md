@@ -16,7 +16,7 @@ Arduino library for 4x4 KeyPad connected to an I2C PCF8574.
 The I2CKeyPad library implements the reading of a 4x4 keypad by means of a PCF8574.
 Smaller keypads, meaning less columns or rows (4x3) can be read with it too.
 
-Since 0.3.2 the library allows a 5x3 keypad to be connected too.
+Since 0.3.2 the library allows a 5x3, 6x2 or 8x1 or smaller keypad to be connected too.
 
 
 
@@ -58,14 +58,14 @@ Returns 16 if no key is pressed and 17 in case of an error.
 however it is not checked if multiple keys are pressed.
 
 
-#### Modi functions
+#### Mode functions
 
 Note: experimental
 
 - **void setKeyPadMode(uint8_t mode = I2C_KEYPAD_4x4)** sets the mode, default 4x4.
 This mode can also be used for 4x3 or 4x2. 
 Invalid values are mapped to 4x4.
-- **uint8_t getKeyPadMode()** returns the set mode.
+- **uint8_t getKeyPadMode()** returns the current mode.
 
 **Supported modi**
 
@@ -82,7 +82,7 @@ E.g. a 4x3 keypad can be read in mode 4x4 or in mode 5x3.
 
 #### KeyMap functions
 
-**loadKeyMap()** must be called first!
+**loadKeyMap()** must be called before **getChar()** and **getLastChar()**!
 
 - **char getChar()** returns the char corresponding to mapped key pressed.
 - **char getLastChar()** returns the last char pressed.
@@ -109,6 +109,8 @@ It is even possible to change the mapping runtime after each key.
 Note: a keyMap char array may be longer than 18 characters, but only the first 18 are used.
 The length is **NOT** checked upon loading.
 
+Note: The 5x3, 6x2 and the 8x1 modi also uses a keymap of length 18.
+
 
 #### Basic working
 
@@ -116,6 +118,9 @@ After the **keypad.begin()** the sketch calls the **keyPad.getKey()** to read va
 - If no key is pressed **I2CKEYPAD_NOKEY** code (16) is returned.
 - If the read value is not valid, e.g. two keys pressed, **I2CKEYPAD_FAIL** code (17) is returned.
 - Otherwise a number 0..15 is returned.
+
+Note NOKEY and FAIL bot have bit 4 set, all valid keys don't.
+This allows fast checking for valid keys.
 
 Only if a key map is loaded, the user can call **getChar()** and **getLastChar()** to get mapped keys.
 

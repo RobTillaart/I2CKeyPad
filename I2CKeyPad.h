@@ -58,7 +58,7 @@ protected:
   uint8_t _read(uint8_t mask);
   uint8_t _getKey4x4();
 
-  //  experimental
+  //  experimental - could be public ?!
   uint8_t _getKey5x3();
   uint8_t _getKey6x2();
   uint8_t _getKey8x1();

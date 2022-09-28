@@ -1,7 +1,7 @@
 {
   "name": "I2CKeyPad",
-  "keywords": "I2C,KeyPad, 4x4, PCF8574",
-  "description": "Arduino library for 4x4 KeyPad connected to a PCF8574. 4x4 or smaller only.",
+  "keywords": "I2C,KeyPad, 4x4, 5x3, 6x2, 8x1, PCF8574",
+  "description": "Arduino library for a KeyPad connected to a PCF8574. 4x4, 5x3, 6x2, 8x1 or smaller.",
   "authors":
   [
     {
