@@ -60,7 +60,7 @@ It might take some trying to get the correct pins connected.
 
 #### Base
 
-- **I2CKEYPAD(const uint8_t deviceAddress, TwoWire \*wire = &Wire)** 
+- **I2CKeyPad(const uint8_t deviceAddress, TwoWire \*wire = &Wire)** 
 The constructor sets the device address and optionally 
 allows to selects the I2C bus to use.
 - **bool begin()** The return value shows if the PCF8574 with the given address is connected properly.
