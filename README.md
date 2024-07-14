@@ -38,18 +38,18 @@ See the conceptual schema below.
 It might take some trying to get the correct pins connected.
 
 ```
-          PROC             PCF8574              KEYPAD
-        +--------+        +--------+          +--------+
-        |        |        |       0|----------|R       |
-        |    SDA |--------|       1|----------|O       |
-        |    SCL |--------|       2|----------|W       |
-        |        |        |       3|----------|S       |
-        |        |        |        |          |        |
-        |        |        |       4|----------|C       |
-        |        |        |       5|----------|O       |
-        |        |        |       6|----------|L       |
-        |        |        |       7|----------|S       |
-        +--------+        +--------+          +--------+ 
+          PROC             PCF8574               KEYPAD
+        +--------+        +---------+          +---------+
+        |        |        |       0 |<-------->| R       |
+        |    SDA |<------>|       1 |<-------->| O       |
+        |    SCL |------->|       2 |<-------->| W       |
+        |        |        |       3 |<-------->| S       |
+        |        |        |         |          |         |
+        |        |        |       4 |<-------->| C       |
+        |        |        |       5 |<-------->| O       |
+        |        |        |       6 |<-------->| L       |
+        |        |        |       7 |<-------->| S       |
+        +--------+        +---------+          +---------+ 
 ```
 
 
@@ -64,6 +64,8 @@ These devices are identical in behaviour although there are two distinct address
 |:-----------|:---------------:|:-------------------------:|
 |  PCF8574   |  0x20 to 0x27   |  same range as PCF8575 !  |
 |  PCF8574A  |  0x38 to 0x3F   |
+
+Be careful to select an unique I2C address for every device on the bus.
 
 
 ### I2C multiplexing
@@ -156,7 +158,24 @@ It is even possible to change the mapping runtime after each key.
 Note: a keyMap char array may be longer than 18 characters, but only the first 18 are used.
 The length is **NOT** checked upon loading.
 
-Note: The 5x3, 6x2 and the 8x1 modi also uses a keymap of length 18.
+Note: The 5x3, 6x2 and the 8x1 modi also uses a key map of length 18.
+
+
+### Debouncing threshold
+
+**Experimental** since version 0.4.1, the library implements a debounce threshold.
+If a key bounces, it can trigger multiple interrupts, while the purpose is to
+act like only one keypress. The debounce threshold prevents reading a key too fast. The default value of the threshold is zero to be backwards compatible.
+The value is set in microseconds, with a maximum of 65535 ~65 milliseconds,
+which is about 16 keys per second.
+
+  //  value in microseconds, max 65535 us
+- **void setDebounceThreshold(uint16_t value = 0)** set the threshold,
+default to zero to reset its value.
+- **uint16_t getDebounceThreshold()** return the set threshold.
+
+If a debounce threshold is set, and **getKey()** is called too fast,
+it will return **I2C_KEYPAD_THRESHOLD**.
 
 
 ### Basic working
@@ -164,6 +183,8 @@ Note: The 5x3, 6x2 and the 8x1 modi also uses a keymap of length 18.
 After the **keypad.begin()** the sketch calls the **keyPad.getKey()** to read values from the keypad. 
 - If no key is pressed **I2CKEYPAD_NOKEY** code (16) is returned.
 - If the read value is not valid, e.g. two keys pressed, **I2CKEYPAD_FAIL** code (17) is returned.
+- If a debounce threshold is set, **I2C_KEYPAD_THRESHOLD** might be returned.
+See section above.
 - Otherwise a number 0..15 is returned.
 
 Note NOKEY and FAIL bot have bit 4 set, all valid keys don't.
@@ -178,11 +199,6 @@ Since version 0.2.1 the library enables the PCF8574 to generate interrupts
 on the PCF8574 when a key is pressed. 
 This makes checking the keypad far more efficient as one does not need to poll over I2C.
 See examples.
-
-
-## Operation
-
-See examples
 
 
 ## Future

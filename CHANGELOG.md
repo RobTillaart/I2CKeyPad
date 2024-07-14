@@ -7,7 +7,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
 ## [0.4.1] - 2024-07-14
-- update readme.md
+- Fix #21, add section to readme.md
+- Fix #22, implement **debounceThreshold**
+- add constant **I2C_KEYPAD_THRESHOLD**
+- update unit test
+- minor edits
 
 
 ## [0.4.0] - 2023-11-09

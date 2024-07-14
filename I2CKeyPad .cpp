@@ -15,6 +15,8 @@ I2CKeyPad::I2CKeyPad(const uint8_t deviceAddress, TwoWire *wire)
   _address = deviceAddress;
   _wire    = wire;
   _mode    = I2C_KEYPAD_4x4;
+  _debounceThreshold = 0;
+  _lastRead = 0;
 }
 
 
@@ -28,6 +30,16 @@ bool I2CKeyPad::begin()
 
 uint8_t I2CKeyPad::getKey()
 {
+  if (_debounceThreshold > 0)
+  {
+    uint32_t now = micros();
+    if (now - _debounceThreshold < _lastRead)
+    {
+      return I2C_KEYPAD_THRESHOLD;
+    }
+    _lastRead = now;
+  }
+
   if (_mode == I2C_KEYPAD_5x3) return _getKey5x3();
   if (_mode == I2C_KEYPAD_6x2) return _getKey6x2();
   if (_mode == I2C_KEYPAD_8x1) return _getKey8x1();
@@ -39,7 +51,7 @@ uint8_t I2CKeyPad::getKey()
 uint8_t I2CKeyPad::getLastKey()
 {
   return _lastKey;
-};
+}
 
 
 //  to check "press any key"
@@ -61,13 +73,13 @@ bool I2CKeyPad::isConnected()
 uint8_t I2CKeyPad::getChar()
 {
   return _keyMap[getKey()];
-};
+}
 
 
 uint8_t I2CKeyPad::getLastChar()
 {
   return _keyMap[_lastKey];
-};
+}
 
 
 void I2CKeyPad::loadKeyMap(char * keyMap)
@@ -95,6 +107,18 @@ uint8_t I2CKeyPad::getKeyPadMode()
 }
 
 
+void I2CKeyPad::setDebounceThreshold(uint16_t value)
+{
+  _debounceThreshold = value;
+}
+
+
+uint16_t I2CKeyPad::getDebounceThreshold()
+{
+  return _debounceThreshold;
+}
+
+
 //////////////////////////////////////////////////////
 //
 //  PROTECTED
@@ -118,7 +142,7 @@ uint8_t I2CKeyPad::_read(uint8_t mask)
 
 uint8_t I2CKeyPad::_getKey4x4()
 {
-  //  key = row + 4 x col
+  //  key = row + 4 x column
   uint8_t key = 0;
 
   //  mask = 4 rows as input pull up, 4 columns as output
@@ -150,7 +174,7 @@ uint8_t I2CKeyPad::_getKey4x4()
 //  not tested
 uint8_t I2CKeyPad::_getKey5x3()
 {
-  //  key = row + 5 x col
+  //  key = row + 5 x column
   uint8_t key = 0;
 
   //  mask = 5 rows as input pull up, 3 columns as output
@@ -182,7 +206,7 @@ uint8_t I2CKeyPad::_getKey5x3()
 //  not tested
 uint8_t I2CKeyPad::_getKey6x2()
 {
-  //  key = row + 6 x col
+  //  key = row + 6 x column
   uint8_t key = 0;
 
   //  mask = 6 rows as input pull up, 2 columns as output
