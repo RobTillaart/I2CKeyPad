@@ -1,7 +1,7 @@
 //
 //    FILE: I2CKeyPad.cpp
 //  AUTHOR: Rob Tillaart
-// VERSION: 0.4.0
+// VERSION: 0.4.1
 // PURPOSE: Arduino library for 4x4 KeyPad connected to an I2C PCF8574
 //     URL: https://github.com/RobTillaart/I2CKeyPad
 
@@ -36,8 +36,8 @@ uint8_t I2CKeyPad::getKey()
 }
 
 
-uint8_t I2CKeyPad::getLastKey()   
-{ 
+uint8_t I2CKeyPad::getLastKey()
+{
   return _lastKey;
 };
 
@@ -59,14 +59,14 @@ bool I2CKeyPad::isConnected()
 
 
 uint8_t I2CKeyPad::getChar()
-{ 
-  return _keyMap[getKey()]; 
+{
+  return _keyMap[getKey()];
 };
 
 
 uint8_t I2CKeyPad::getLastChar()
-{ 
-  return _keyMap[_lastKey]; 
+{
+  return _keyMap[_lastKey];
 };
 
 
@@ -78,7 +78,7 @@ void I2CKeyPad::loadKeyMap(char * keyMap)
 
 void I2CKeyPad::setKeyPadMode(uint8_t mode)
 {
-  if ((mode == I2C_KEYPAD_5x3) || 
+  if ((mode == I2C_KEYPAD_5x3) ||
       (mode == I2C_KEYPAD_6x2) ||
       (mode == I2C_KEYPAD_8x1))
   {

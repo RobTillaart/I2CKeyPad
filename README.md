@@ -25,6 +25,7 @@ Since 0.3.2 the library allows a 5x3, 6x2 or 8x1 or smaller keypad to be connect
 
 Relates strongly to https://github.com/RobTillaart/I2CKeyPad8x8. which is an 8x8 version using **PCF8575**.
 
+- https://github.com/RobTillaart/PCF8574
 - https://github.com/RobTillaart/AnalogKeypad
 - https://github.com/RobTillaart/I2CKeyPad8x8
 - https://github.com/WK-Software56/AdvKeyPad (derived work with keyboard alike interface)
@@ -52,13 +53,44 @@ It might take some trying to get the correct pins connected.
 ```
 
 
+## I2C
+
+### I2C addresses
+
+This library uses a PCF8574 or a PCF8574A chip.
+These devices are identical in behaviour although there are two distinct address ranges.
+
+|  Type      |  Address-range  |  Notes                    |
+|:-----------|:---------------:|:-------------------------:|
+|  PCF8574   |  0x20 to 0x27   |  same range as PCF8575 !  |
+|  PCF8574A  |  0x38 to 0x3F   |
+
+
+### I2C multiplexing
+
+Sometimes you need to control more devices than possible with the default
+address range the device provides.
+This is possible with an I2C multiplexer e.g. TCA9548 which creates up
+to eight channels (think of it as I2C subnets) which can use the complete
+address range of the device.
+
+Drawback of using a multiplexer is that it takes more administration in
+your code e.g. which device is on which channel.
+This will slow down the access, which must be taken into account when
+deciding which devices are on which channel.
+Also note that switching between channels will slow down other devices
+too if they are behind the multiplexer.
+
+- https://github.com/RobTillaart/TCA9548
+
+
 ## Interface
 
 ```cpp
 #include "I2CKeyPad.h"
 ```
 
-#### Base
+### Base
 
 - **I2CKeyPad(const uint8_t deviceAddress, TwoWire \*wire = &Wire)** 
 The constructor sets the device address and optionally 
@@ -73,7 +105,7 @@ Returns 16 if no key is pressed and 17 in case of an error.
 however it is not checked if multiple keys are pressed.
 
 
-#### Mode functions
+### Mode functions
 
 Note: experimental
 
@@ -95,7 +127,7 @@ E.g. a 4x3 keypad can be read in mode 4x4 or in mode 5x3.
 |  8x1   |    81   |  I2C_KEYPAD_8x1  |  not real matrix, connect pins to switch to GND.
 
 
-#### KeyMap functions
+### KeyMap functions
 
 **loadKeyMap()** must be called before **getChar()** and **getLastChar()**!
 
@@ -127,7 +159,7 @@ The length is **NOT** checked upon loading.
 Note: The 5x3, 6x2 and the 8x1 modi also uses a keymap of length 18.
 
 
-#### Basic working
+### Basic working
 
 After the **keypad.begin()** the sketch calls the **keyPad.getKey()** to read values from the keypad. 
 - If no key is pressed **I2CKEYPAD_NOKEY** code (16) is returned.
