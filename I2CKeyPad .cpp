@@ -28,6 +28,13 @@ bool I2CKeyPad::begin()
 }
 
 
+bool I2CKeyPad::isConnected()
+{
+  _wire->beginTransmission(_address);
+  return (_wire->endTransmission() == 0);
+}
+
+
 uint8_t I2CKeyPad::getKey()
 {
   if (_debounceThreshold > 0)
@@ -60,13 +67,6 @@ bool I2CKeyPad::isPressed()
   uint8_t a = _read(0xF0);
   if (a == 0xFF) return false;
   return (a != 0xF0);
-}
-
-
-bool I2CKeyPad::isConnected()
-{
-  _wire->beginTransmission(_address);
-  return (_wire->endTransmission() == 0);
 }
 
 

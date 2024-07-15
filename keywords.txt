@@ -6,10 +6,11 @@ I2CKeyPad	KEYWORD1
 
 # Methods and Functions (KEYWORD2)
 begin	KEYWORD2
+isConnected()	KEYWORD2
+
 getKey	KEYWORD2
 getLastKey	KEYWORD2
 isPressed	KEYWORD2
-isConnected()	KEYWORD2
 
 getChar	KEYWORD2
 getLastChar	KEYWORD2

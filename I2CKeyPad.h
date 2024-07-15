@@ -33,13 +33,12 @@ public:
 
   //  call Wire.begin() first!
   bool     begin();
+  bool     isConnected();
 
   //  get raw key's 0..15
   uint8_t  getKey();
   uint8_t  getLastKey();
-
   bool     isPressed();
-  bool     isConnected();
 
   //  get 'translated' keys
   //  user must load KeyMap, there is no check.

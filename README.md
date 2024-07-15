@@ -34,6 +34,7 @@ Relates strongly to https://github.com/RobTillaart/I2CKeyPad8x8. which is an 8x8
 
 - https://github.com/RobTillaart/PCF8574
 - https://github.com/RobTillaart/AnalogKeypad
+- https://github.com/RobTillaart/I2CKeyPad4x4
 - https://github.com/RobTillaart/I2CKeyPad8x8
 - https://github.com/WK-Software56/AdvKeyPad (derived work with keyboard alike interface)
 
@@ -196,13 +197,13 @@ Feedback welcome!
 ### Basic working
 
 After the **keypad.begin()** the sketch calls the **keyPad.getKey()** to read values from the keypad. 
-- If no key is pressed **I2CKEYPAD_NOKEY** code (16) is returned.
-- If the read value is not valid, e.g. two keys pressed, **I2CKEYPAD_FAIL** code (17) is returned.
+- If no key is pressed **I2C_KEYPAD_NOKEY** code (16) is returned.
+- If the read value is not valid, e.g. two keys pressed, **I2C_KEYPAD_FAIL** code (17) is returned.
 - If a debounce threshold is set, **I2C_KEYPAD_THRESHOLD** might be returned.
 See section above.
 - Otherwise a number 0..15 is returned.
 
-Note NOKEY and FAIL bot have bit 4 set, all valid keys don't.
+Note NOKEY and FAIL both have bit 4 set, all valid keys don't.
 This allows fast checking for valid keys.
 
 Only if a key map is loaded, the user can call **getChar()** and **getLastChar()** to get mapped keys.
@@ -210,8 +211,7 @@ Only if a key map is loaded, the user can call **getChar()** and **getLastChar()
 
 ## Interrupts
 
-Since version 0.2.1 the library enables the PCF8574 to generate interrupts 
-on the PCF8574 when a key is pressed. 
+The library enables the PCF8574 to generate interrupts on the PCF8574 when a key is pressed. 
 This makes checking the keypad far more efficient as one does not need to poll the device over I2C.
 See examples.
 
