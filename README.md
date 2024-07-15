@@ -184,15 +184,16 @@ which is about 16 keys per second.
 
 The default value of the debounce threshold is zero to be backwards compatible.
 
-  //  value in microseconds, max 65535 us
 - **void setDebounceThreshold(uint16_t value = 0)** set the debounce threshold,
-default value is zero, to reset its value.
+value in microseconds, max 65535 us.
+The default value is zero, to reset its value.
 - **uint16_t getDebounceThreshold()** returns the set debounce threshold.
 
 If a debounce threshold is set, and **getKey()** is called too fast,
 the function will return **I2C_KEYPAD_THRESHOLD** (255).
 
 Feedback welcome!
+
 
 ### Basic working
 
