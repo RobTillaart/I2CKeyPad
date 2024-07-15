@@ -21,14 +21,14 @@ Smaller keypads, meaning less columns or rows (4x3) can be read with it too.
 
 Since 0.3.2 the library allows a 5x3, 6x2 or 8x1 or smaller keypad to be connected too.
 
-#### Breaking change
+### Breaking change
 
 Since 0.5.0 the library can set a debounce threshold. 
 If this is set (> 0) the **getKey()** and **getChar()** functions 
 can return **I2C_KEYPAD_THRESHOLD** (255).
 
 
-#### Related
+### Related
 
 Relates strongly to https://github.com/RobTillaart/I2CKeyPad8x8. which is an 8x8 version using **PCF8575**.
 
