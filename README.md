@@ -21,6 +21,13 @@ Smaller keypads, meaning less columns or rows (4x3) can be read with it too.
 
 Since 0.3.2 the library allows a 5x3, 6x2 or 8x1 or smaller keypad to be connected too.
 
+#### Breaking change
+
+Since 0.5.0 the library can set a debounce threshold. 
+If this is set (> 0) the **getKey()** and **getChar()** functions 
+can return **I2C_KEYPAD_THRESHOLD** (255).
+
+
 #### Related
 
 Relates strongly to https://github.com/RobTillaart/I2CKeyPad8x8. which is an 8x8 version using **PCF8575**.
@@ -134,7 +141,9 @@ E.g. a 4x3 keypad can be read in mode 4x4 or in mode 5x3.
 Note: **loadKeyMap()** must be called before **getChar()** and **getLastChar()**!
 
 - **char getChar()** returns the char corresponding to mapped key pressed.
+It returns **I2C_KEYPAD_THRESHOLD** if called too fast.
 - **char getLastChar()** returns the last char pressed.
+This function is not affected by the debounce threshold.
 - **bool loadKeyMap(char \* keyMap)** keyMap should point to a (global) char array of length 19.
 This array maps index 0..15 on a char and index \[16\] maps to **I2CKEYPAD_NOKEY** (typical 'N') 
 and index \[17\] maps **I2CKEYPAD_FAIL** (typical 'F'). index 18 is the null char.
@@ -163,7 +172,9 @@ Note: The 5x3, 6x2 and the 8x1 modi also uses a key map of length 18.
 
 ### Debouncing threshold
 
-**Experimental** since version 0.4.1, the library implements a debounce threshold.
+**Experimental** 
+
+Since version 0.5.0, the library implements a debounce threshold.
 If a key bounces, it can trigger multiple interrupts, while the purpose is to
 act like only one keypress. The debounce threshold prevents reading a key too fast. 
 The default value of the threshold is zero to be backwards compatible.
@@ -180,6 +191,7 @@ default value is zero, to reset its value.
 If a debounce threshold is set, and **getKey()** is called too fast,
 the function will return **I2C_KEYPAD_THRESHOLD** (255).
 
+Feedback welcome!
 
 ### Basic working
 
@@ -209,8 +221,6 @@ See examples.
 #### Must
 
 - update documentation
-- fix problem between getChar() getKey() and **I2C_KEYPAD_THRESHOLD** (255).
-
 
 #### Should
 
