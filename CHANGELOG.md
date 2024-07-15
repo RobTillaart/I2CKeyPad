@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Fix #22, implement **debounceThreshold**
 - add constant **I2C_KEYPAD_THRESHOLD**
 - update unit test
+- update keywords.txt
 - minor edits
 
 

@@ -112,26 +112,26 @@ however it is not checked if multiple keys are pressed.
 Note: experimental
 
 - **void setKeyPadMode(uint8_t mode = I2C_KEYPAD_4x4)** sets the mode, default 4x4.
-This mode can also be used for 4x3 or 4x2. 
-Invalid values are mapped to 4x4.
+This mode can also be used for 4x3 or 4x2 or 3x3 etc. 
+Invalid values for mode are mapped to 4x4.
 - **uint8_t getKeyPadMode()** returns the current mode.
 
 **Supported modi**
 
-There are 4 modi supported, and every mode also supports smaller keypads.
+There are 4 modi supported, and every mode will also support smaller keypads.
 E.g. a 4x3 keypad can be read in mode 4x4 or in mode 5x3.
 
 |  modi  |  value  |  definition      |  notes    |
 |:------:|:-------:|:-----------------|:----------|
-|  4x4   |    44   |  I2C_KEYPAD_4x4  |  default  |
-|  5x3   |    53   |  I2C_KEYPAD_5x3  |
-|  6x2   |    62   |  I2C_KEYPAD_6x2  |
+|  4x4   |    44   |  I2C_KEYPAD_4x4  |  default, also for 4x3 4x2 4x1 3x3 3x2 3x1 etc.
+|  5x3   |    53   |  I2C_KEYPAD_5x3  |  also for 5x2 or 5x1 etc.
+|  6x2   |    62   |  I2C_KEYPAD_6x2  |  also for 6x1 etc.
 |  8x1   |    81   |  I2C_KEYPAD_8x1  |  not real matrix, connect pins to switch to GND.
 
 
 ### KeyMap functions
 
-**loadKeyMap()** must be called before **getChar()** and **getLastChar()**!
+Note: **loadKeyMap()** must be called before **getChar()** and **getLastChar()**!
 
 - **char getChar()** returns the char corresponding to mapped key pressed.
 - **char getLastChar()** returns the last char pressed.
@@ -165,17 +165,20 @@ Note: The 5x3, 6x2 and the 8x1 modi also uses a key map of length 18.
 
 **Experimental** since version 0.4.1, the library implements a debounce threshold.
 If a key bounces, it can trigger multiple interrupts, while the purpose is to
-act like only one keypress. The debounce threshold prevents reading a key too fast. The default value of the threshold is zero to be backwards compatible.
+act like only one keypress. The debounce threshold prevents reading a key too fast. 
+The default value of the threshold is zero to be backwards compatible.
 The value is set in microseconds, with a maximum of 65535 ~65 milliseconds,
 which is about 16 keys per second.
 
+The default value of the debounce threshold is zero to be backwards compatible.
+
   //  value in microseconds, max 65535 us
-- **void setDebounceThreshold(uint16_t value = 0)** set the threshold,
-default to zero to reset its value.
-- **uint16_t getDebounceThreshold()** return the set threshold.
+- **void setDebounceThreshold(uint16_t value = 0)** set the debounce threshold,
+default value is zero, to reset its value.
+- **uint16_t getDebounceThreshold()** returns the set debounce threshold.
 
 If a debounce threshold is set, and **getKey()** is called too fast,
-it will return **I2C_KEYPAD_THRESHOLD**.
+the function will return **I2C_KEYPAD_THRESHOLD** (255).
 
 
 ### Basic working
@@ -197,7 +200,7 @@ Only if a key map is loaded, the user can call **getChar()** and **getLastChar()
 
 Since version 0.2.1 the library enables the PCF8574 to generate interrupts 
 on the PCF8574 when a key is pressed. 
-This makes checking the keypad far more efficient as one does not need to poll over I2C.
+This makes checking the keypad far more efficient as one does not need to poll the device over I2C.
 See examples.
 
 
@@ -206,6 +209,8 @@ See examples.
 #### Must
 
 - update documentation
+- fix problem between getChar() getKey() and **I2C_KEYPAD_THRESHOLD** (255).
+
 
 #### Should
 

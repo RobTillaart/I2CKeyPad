@@ -72,7 +72,12 @@ bool I2CKeyPad::isConnected()
 
 uint8_t I2CKeyPad::getChar()
 {
-  return _keyMap[getKey()];
+  uint8_t key = getKey();
+  if (key != I2C_KEYPAD_THRESHOLD)
+  {
+    return _keyMap[key];
+  }
+  return I2C_KEYPAD_THRESHOLD;
 }
 
 
