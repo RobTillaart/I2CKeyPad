@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Fix #21, add section to readme.md
 - Fix #22, implement **debounceThreshold**
 - add constant **I2C_KEYPAD_THRESHOLD**
+- add **uint32_t getLastTimeRead()**
 - update **getChar()** to support **I2C_KEYPAD_THRESHOLD**
 - update readme.md
 - update unit test

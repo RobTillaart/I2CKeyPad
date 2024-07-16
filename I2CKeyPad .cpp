@@ -16,7 +16,7 @@ I2CKeyPad::I2CKeyPad(const uint8_t deviceAddress, TwoWire *wire)
   _wire    = wire;
   _mode    = I2C_KEYPAD_4x4;
   _debounceThreshold = 0;
-  _lastRead = 0;
+  _lastTimeRead      = 0;
 }
 
 
@@ -37,21 +37,26 @@ bool I2CKeyPad::isConnected()
 
 uint8_t I2CKeyPad::getKey()
 {
+  uint32_t now = millis();
   if (_debounceThreshold > 0)
   {
-    uint32_t now = micros();
-    if (now - _debounceThreshold < _lastRead)
+    if (now - _debounceThreshold < _lastTimeRead)
     {
       return I2C_KEYPAD_THRESHOLD;
     }
-    _lastRead = now;
   }
 
-  if (_mode == I2C_KEYPAD_5x3) return _getKey5x3();
-  if (_mode == I2C_KEYPAD_6x2) return _getKey6x2();
-  if (_mode == I2C_KEYPAD_8x1) return _getKey8x1();
-  //  default.
-  return _getKey4x4();
+  uint8_t key = 0;
+  if      (_mode == I2C_KEYPAD_5x3) key = _getKey5x3();
+  else if (_mode == I2C_KEYPAD_6x2) key = _getKey6x2();
+  else if (_mode == I2C_KEYPAD_8x1) key = _getKey8x1();
+  else                              key = _getKey4x4();  //  default.
+
+  if (key == I2C_KEYPAD_FAIL) return key;  //  propagate error.
+  //  valid keys + NOKEY
+  _lastKey = key;
+  _lastTimeRead = now;
+  return key;
 }
 
 
@@ -124,6 +129,12 @@ uint16_t I2CKeyPad::getDebounceThreshold()
 }
 
 
+uint32_t I2CKeyPad::getLastTimeRead()
+{
+  return _lastTimeRead;
+}
+
+
 //////////////////////////////////////////////////////
 //
 //  PROTECTED
@@ -170,8 +181,6 @@ uint8_t I2CKeyPad::_getKey4x4()
   else if (cols == 0x07) key += 12;
   else return I2C_KEYPAD_FAIL;
 
-  _lastKey = key;
-
   return key;   //  0..15
 }
 
@@ -201,8 +210,6 @@ uint8_t I2CKeyPad::_getKey5x3()
   else if (cols == 0x05) key += 5;
   else if (cols == 0x03) key += 10;
   else return I2C_KEYPAD_FAIL;
-
-  _lastKey = key;
 
   return key;   //  0..14
 }
@@ -234,8 +241,6 @@ uint8_t I2CKeyPad::_getKey6x2()
   else if (cols == 0x01) key += 6;
   else return I2C_KEYPAD_FAIL;
 
-  _lastKey = key;
-
   return key;   //  0..11
 }
 
@@ -259,8 +264,6 @@ uint8_t I2CKeyPad::_getKey8x1()
   else if (rows == 0xBF) key = 6;
   else if (rows == 0x7F) key = 7;
   else return I2C_KEYPAD_FAIL;
-
-  _lastKey = key;
 
   return key;   //  0..7
 }

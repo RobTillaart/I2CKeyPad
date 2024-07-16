@@ -109,15 +109,18 @@ allows to selects the I2C bus to use.
 Call wire.begin() first!
 - **bool isConnected()** returns false if the PCF8574 cannot be connected to.
 - **uint8_t getKey()** Returns default 0..15 for regular keys, 
-Returns 16 if no key is pressed and 17 in case of an error.
-- **uint8_t getLastKey()** Returns the last **valid** key pressed 0..15. Initially it will return 16 (noKey).
-- **bool isPressed()** Returns true if one or more keys of the keyPad is pressed, 
-however it is not checked if multiple keys are pressed.
+Returns **I2C_KEYPAD_NOKEY** (16) if no key is pressed and **I2C_KEYPAD_FAIL**
+(17) in case of an error, e.g. multiple keys pressed.
+If a debounce delay is set, it might return **I2C_KEYPAD_THRESHOLD** if called too fast.
+- **uint8_t getLastKey()** Returns the last **valid** key pressed 0..15, 
+or **I2C_KEYPAD_NOKEY** (16) which is also the initial value.
+- **bool isPressed()** Returns true if one or more keys of the keyPad are pressed, 
+however there is no check if multiple keys are pressed.
 
 
 ### Mode functions
 
-Note: experimental
+**Experimental**
 
 - **void setKeyPadMode(uint8_t mode = I2C_KEYPAD_4x4)** sets the mode, default 4x4.
 This mode can also be used for 4x3 or 4x2 or 3x3 etc. 
@@ -150,6 +153,7 @@ This array maps index 0..15 on a char and index \[16\] maps to **I2CKEYPAD_NOKEY
 and index \[17\] maps **I2CKEYPAD_FAIL** (typical 'F'). index 18 is the null char.
 
 **WARNING**
+
 If there is no key map loaded the user should **NOT** call **getChar()** or 
 **getLastChar()** as these would return meaningless bytes.
 
@@ -173,24 +177,33 @@ Note: The 5x3, 6x2 and the 8x1 modi also uses a key map of length 18.
 
 ### Debouncing threshold
 
-**Experimental** 
+**Experimental**
 
-Since version 0.5.0, the library implements a debounce threshold.
+Since version 0.5.0, the library implements an experimental debounce threshold
+which is non-blocking.
+
 If a key bounces, it can trigger multiple interrupts, while the purpose is to
-act like only one keypress. The debounce threshold prevents reading a key too fast. 
-The default value of the threshold is zero to be backwards compatible.
-The value is set in microseconds, with a maximum of 65535 ~65 milliseconds,
-which is about 16 keys per second.
+act like only one keypress. The debounce threshold results in a fast return 
+of **getKey()** (with **I2C_KEYPAD_THRESHOLD**) if called too fast.
+
+The default value of the debounce threshold is zero to be backwards compatible.
+The value is set in milliseconds, with a maximum of 65535 ==> about 65 seconds or 1 minute.
+A value of 1 still allows ~1000 **getKey()** calls per second (in theory).
+A value of 65535 can be used e.g. for a delay after entering a wrong key code / password.
+Setting a high value might result in missed keypresses so use with care.
 
 The default value of the debounce threshold is zero to be backwards compatible.
 
 - **void setDebounceThreshold(uint16_t value = 0)** set the debounce threshold,
-value in microseconds, max 65535 us.
+value in milliseconds, max 65535.
 The default value is zero, to reset its value.
 - **uint16_t getDebounceThreshold()** returns the set debounce threshold.
+- **uint32_t getLastTimeRead()** returns the time stamp of the last valid read key
+(or NOKEY). This variable is used for the debounce, and may be used for other
+purposes too. E.g. track time between keypresses.
 
-If a debounce threshold is set, and **getKey()** is called too fast,
-the function will return **I2C_KEYPAD_THRESHOLD** (255).
+If a debounce threshold is set, and **getKey()** or **getChar()** is called too fast,
+these functions will return **I2C_KEYPAD_THRESHOLD** (255).
 
 Feedback welcome!
 
@@ -226,6 +239,8 @@ See examples.
 #### Should
 
 - test key mapping functions.
+- improve error handling?
+  - **I2C_KEYPAD_ERR_MODE**
 
 #### Could
 

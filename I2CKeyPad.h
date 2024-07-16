@@ -50,9 +50,10 @@ public:
   void     setKeyPadMode(uint8_t mode = I2C_KEYPAD_4x4);
   uint8_t  getKeyPadMode();
 
-  //  value in microseconds, max 65535 us
+  //  value in milliseconds, max 65535 ms
   void     setDebounceThreshold(uint16_t value = 0);
   uint16_t getDebounceThreshold();
+  uint32_t getLastTimeRead();
 
 
 protected:
@@ -61,7 +62,7 @@ protected:
   uint8_t  _mode;
   uint8_t  _read(uint8_t mask);
   uint16_t _debounceThreshold;
-  uint32_t _lastRead;
+  uint32_t _lastTimeRead;
 
   uint8_t  _getKey4x4();
   uint8_t  _getKey5x3();
