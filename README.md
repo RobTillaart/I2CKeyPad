@@ -238,7 +238,11 @@ See examples.
 
 #### Should
 
-- test key mapping functions.
+- test extensively
+  - basic working (OK)
+  - interrupts
+  - keymapping
+  - performance
 - improve error handling?
   - **I2C_KEYPAD_ERR_MODE**
 
