@@ -126,8 +126,8 @@ however there is no check if multiple keys are pressed.
 |  getKey()  |  HEX code    |  Meaning               |  Notes  |
 |:----------:|:------------:|:-----------------------|:--------|
 |  0..15     |  0x00..0x0F  |  valid key pressed     |
-|  16        |  0x40        |  I2C_KEYPAD_NOKEY      |
-|  17        |  0x41        |  I2C_KEYPAD_FAIL       |  multi key or I2C communication error.
+|  16        |  0x10        |  I2C_KEYPAD_NOKEY      |
+|  17        |  0x11        |  I2C_KEYPAD_FAIL       |  multi key or I2C communication error.
 |  255       |  0xFF        |  I2C_KEYPAD_THRESHOLD  |
 
 
