@@ -110,7 +110,8 @@ Call wire.begin() first!
 - **bool isConnected()** returns false if the device address of the PCF8574 cannot be seen on the I2C bus.
 - **uint8_t getAddress()** returns the set device address.
 
-### Base
+
+### getKey
 
 - **uint8_t getKey()** Returns default 0..15 for regular keys,
 Returns **I2C_KEYPAD_NOKEY** (16) if no key is pressed and **I2C_KEYPAD_FAIL**
@@ -120,6 +121,14 @@ If a debounce delay is set, it might return **I2C_KEYPAD_THRESHOLD** if called t
 or **I2C_KEYPAD_NOKEY** (16) which is also the initial value.
 - **bool isPressed()** Returns true if one or more keys of the keyPad are pressed,
 however there is no check if multiple keys are pressed.
+
+
+|  getKey()  |  HEX code    |  Meaning               |  Notes  |
+|:----------:|:------------:|:-----------------------|:--------|
+|  0..15     |  0x00..0x0F  |  valid key pressed     |
+|  16        |  0x40        |  I2C_KEYPAD_NOKEY      |
+|  17        |  0x41        |  I2C_KEYPAD_FAIL       |  multi key or I2C communication error.
+|  255       |  0xFF        |  I2C_KEYPAD_THRESHOLD  |
 
 
 ### Mode functions
